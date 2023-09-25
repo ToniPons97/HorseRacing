@@ -10,8 +10,8 @@ public class HorseController : MonoBehaviour
     private GameState state;
     private Animator animator;
 
-    public float minSpeed = 2.0f;
-    public float maxSpeed = 6.0f;
+    public float minSpeed = 1.0f;
+    public float maxSpeed = 3.0f;
     public float speedVariation = 0.5f; // Maximum variation to limit the difference in speed
 
     // Start is called before the first frame update

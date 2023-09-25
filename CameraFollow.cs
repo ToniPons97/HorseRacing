@@ -13,7 +13,7 @@ public class CameraFollow : MonoBehaviour
 
 
     [SerializeField] private float minOrthoSize = 5.0f; // Minimum orthographic size
-    [SerializeField] private float maxOrthoSize = 10.0f; // Maximum orthographic size
+    [SerializeField] private float maxOrthoSize = 8.0f; // Maximum orthographic size
     [SerializeField] private float orthoSizeLerpSpeed = 2.0f; // Speed at which orthographic size changes
 
     private void Start()
