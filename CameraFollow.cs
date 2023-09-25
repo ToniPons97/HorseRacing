@@ -11,6 +11,8 @@ public class CameraFollow : MonoBehaviour
     private GameObject gameState;
     private GameState state;
 
+    private Vector3 initialPosition;
+
 
     [SerializeField] private float minOrthoSize = 5.0f; // Minimum orthographic size
     [SerializeField] private float maxOrthoSize = 8.0f; // Maximum orthographic size
@@ -20,15 +22,17 @@ public class CameraFollow : MonoBehaviour
     {
         mainCamera = Camera.main;
         gameState = GameObject.FindGameObjectWithTag("gameState");
-
+        initialPosition = transform.position;
     }
 
     private void Update()
     {
         // Don't follow horses until race has started.
         state = gameState.GetComponent<GameState>();
+
         if (!state.GetRacingState())
         {
+            transform.position = new Vector3(0, 0, -10);
             return;
         }
 
@@ -40,9 +44,8 @@ public class CameraFollow : MonoBehaviour
         // Calculate the average position of all the horses
         Vector3 averagePosition = Vector3.zero;
         foreach (Transform horse in transforms)
-        {
             averagePosition += horse.position;
-        }
+
         averagePosition /= transforms.Count;
 
         // Apply the offset to the average position
@@ -78,9 +81,7 @@ public class CameraFollow : MonoBehaviour
             float distance = Vector3.Distance(horse.position, transform.position);
 
             if (distance > maxDistance)
-            {
                 maxDistance = distance;
-            }
         }
 
         float targetOrthoSize = Mathf.Clamp(maxDistance, minOrthoSize, maxOrthoSize);
