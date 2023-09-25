@@ -20,6 +20,7 @@ public class CameraFollow : MonoBehaviour
     {
         mainCamera = Camera.main;
         gameState = GameObject.FindGameObjectWithTag("gameState");
+
     }
 
     private void Update()
@@ -27,7 +28,9 @@ public class CameraFollow : MonoBehaviour
         // Don't follow horses until race has started.
         state = gameState.GetComponent<GameState>();
         if (!state.GetRacingState())
+        {
             return;
+        }
 
         FindHorses();
 
