@@ -2,15 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class HorseController : MonoBehaviour
 {
-
     private GameObject gameState;
-    private float baseSpeed = 0.0f;
+    private float baseSpeed;
     private bool racing;
     private GameState state;
     private Animator animator;
+
+    public float minSpeed = 2.0f;
+    public float maxSpeed = 6.0f;
+    public float speedVariation = 0.5f; // Maximum variation to limit the difference in speed
 
     // Start is called before the first frame update
     void Start()
@@ -19,6 +21,17 @@ public class HorseController : MonoBehaviour
         state = gameState.GetComponent<GameState>();
 
         animator = gameObject.GetComponent<Animator>();
+
+        // Assign a random speed within the specified range to each horse.
+        baseSpeed = Random.Range(minSpeed, maxSpeed);
+        SetHorseSpeed(baseSpeed);
+    }
+
+    // Function to set the horse's speed
+    private void SetHorseSpeed(float speed)
+    {
+        // Adjust the animation speed based on the horse's actual speed.
+        animator.SetFloat("SpeedMultiplier", speed);
     }
 
     // Update is called once per frame
@@ -26,14 +39,18 @@ public class HorseController : MonoBehaviour
     {
         racing = state.GetRacingState();
 
-        Debug.Log(animator.GetBool("isRunning"));
-
         // Play running animation when racing.
-        if (racing)
-            animator.SetBool("isRunning", true);
+        animator.SetBool("isRunning", racing);
 
-        baseSpeed = racing ?  Random.Range(2, 6) : 0; 
-        float randFactor = racing ? Random.value * Random.Range(2, 3) : 0;
-        gameObject.transform.Translate(baseSpeed * randFactor * Time.deltaTime, 0, 0);
+        // Adjust speed slightly to limit the difference
+        if (racing)
+        {
+            baseSpeed += Random.Range(-speedVariation, speedVariation);
+            baseSpeed = Mathf.Clamp(baseSpeed, minSpeed, maxSpeed);
+
+            float randFactor = Random.Range(2.0f, 3.0f);
+            float moveSpeed = randFactor * baseSpeed;
+            transform.Translate(moveSpeed * Time.deltaTime, 0, 0);
+        }
     }
 }
