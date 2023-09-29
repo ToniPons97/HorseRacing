@@ -5,6 +5,10 @@ using UnityEngine;
 public class HorseInstantiator : MonoBehaviour
 {
     [SerializeField] private GameObject horse;
+
+    [SerializeField] private float wtf = 4;
+    [SerializeField] private float multiplier = 2;
+
     private readonly float spawnX = -9.37f;
     private float spawnY;
 
@@ -20,7 +24,7 @@ public class HorseInstantiator : MonoBehaviour
     {
         for (int i = 0; i < 5; i++)
         {
-            spawnY = 4 - i * 2;
+            spawnY = wtf - i * multiplier;
             position = new(spawnX, spawnY, 0);
             GameObject newHorse = Instantiate(horse, position, Quaternion.identity);
             newHorse.name = "Horse " + (i + 1);

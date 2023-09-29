@@ -16,7 +16,6 @@ public class HandleTrigger : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         finishPositions.Add(collision.name);
-        Debug.Log(collision.name);
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -38,5 +37,10 @@ public class HandleTrigger : MonoBehaviour
             // Reset exitCount.
             exitCount = 0;
         }
+    }
+
+    public List<string> GetFinishOrder()
+    {
+        return finishPositions;
     }
 }
