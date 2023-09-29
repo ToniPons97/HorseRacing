@@ -39,6 +39,9 @@ public class HorseController : MonoBehaviour
     {
         racing = state.GetRacingState();
 
+        // Enable or disable renderer based on racing state.
+        GetComponent<SpriteRenderer>().enabled = racing;
+
         // Play running animation when racing.
         animator.SetBool("isRunning", racing);
 

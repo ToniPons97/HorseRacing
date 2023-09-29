@@ -7,6 +7,7 @@ public class Parallax : MonoBehaviour
     [SerializeField] private float distance;
     Material mat;
 
+    [SerializeField]
     [Range(0f, 0.5f)]
     private float speed = 0.2f;
 

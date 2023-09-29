@@ -13,7 +13,6 @@ public class GameState : MonoBehaviour
     private List<string> finishPositions;
     private GameObject finishLine;
 
-
     private void Start()
     {
         finishLine = GameObject.FindGameObjectWithTag("Finish");
