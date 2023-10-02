@@ -8,6 +8,10 @@ public class GameState : MonoBehaviour
     [SerializeField] private GameObject raceButton;
     [SerializeField] private TMP_Text finalPositionsDisplay;
 
+    [SerializeField] private TMP_Text moneyDisplay;
+    [SerializeField] private GameObject gamblerGO;
+    private Gambler gambler;
+
     private bool racing;
 
     private List<string> finishPositions;
@@ -16,6 +20,9 @@ public class GameState : MonoBehaviour
     private void Start()
     {
         finishLine = GameObject.FindGameObjectWithTag("Finish");
+        gambler = gamblerGO.GetComponent<Gambler>();
+
+        moneyDisplay.text = "$" + gambler.GetMoney();
     }
 
     // Update is called once per frame
