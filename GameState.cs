@@ -6,9 +6,9 @@ public class GameState : MonoBehaviour
 {
     [SerializeField] private GameObject horseInstantiator;
     [SerializeField] private GameObject raceButton;
-    [SerializeField] private TMP_Text finalPositionsDisplay;
-
-    [SerializeField] private TMP_Text moneyDisplay;
+    private TMP_Text finalPositionsText;
+    private GameObject display;
+    private TMP_Text moneyText;
     [SerializeField] private GameObject gamblerGO;
     private Gambler gambler;
 
@@ -21,8 +21,11 @@ public class GameState : MonoBehaviour
     {
         finishLine = GameObject.FindGameObjectWithTag("Finish");
         gambler = gamblerGO.GetComponent<Gambler>();
+        display = GameObject.FindGameObjectWithTag("Display");
+        finalPositionsText = display.transform.GetChild(0).GetComponent<TMP_Text>();
+        moneyText = GameObject.FindGameObjectWithTag("MoneyText").GetComponent<TMP_Text>();
 
-        moneyDisplay.text = "$" + gambler.GetMoney();
+        moneyText.text = "$" + gambler.GetMoney();
     }
 
     // Update is called once per frame
@@ -31,10 +34,20 @@ public class GameState : MonoBehaviour
         if (racing)
         {
             raceButton.SetActive(false);
+            display.SetActive(false);
         }
         else
         {
             raceButton.SetActive(true);
+
+            if (finalPositionsText.text.Length > 0)
+            {
+                display.SetActive(true);
+            }
+            else
+            {
+                display.SetActive(false);
+            }
 
             GameObject[] horses = GameObject.FindGameObjectsWithTag("Horse");
             if (horses.Length != 5)
@@ -48,11 +61,11 @@ public class GameState : MonoBehaviour
             finishPositions = finishLine.GetComponent<HandleTrigger>()
                 .GetFinishOrder();
 
-            finalPositionsDisplay.text = "";
+            finalPositionsText.text = "";
             int posCount = 1;
             foreach (string horse in finishPositions)
             {
-                finalPositionsDisplay.text += posCount + ". " + horse + "\n";
+                finalPositionsText.text += posCount + ". " + horse + "\n";
                 posCount++;
 
                 if (posCount > 5)
@@ -71,9 +84,9 @@ public class GameState : MonoBehaviour
     public void SetRacingState(bool newState)
     {
         racing = newState;
-        if (racing && finalPositionsDisplay.text != "")
+        if (racing && finalPositionsText.text != "")
         {
-            finalPositionsDisplay.text = "";
+            finalPositionsText.text = "";
             finishPositions.Clear();
         }
     }
