@@ -7,12 +7,13 @@ public class GameState : MonoBehaviour
     [SerializeField] private GameObject horseInstantiator;
     [SerializeField] private GameObject raceButton;
     private TMP_Text finalPositionsText;
-    private GameObject display;
+    private GameObject resultsDisplay;
     private TMP_Text moneyText;
     [SerializeField] private GameObject gamblerGO;
     private Gambler gambler;
 
     private bool racing;
+    private bool hasPlacedBet;
 
     private List<string> finishPositions;
     private GameObject finishLine;
@@ -21,20 +22,23 @@ public class GameState : MonoBehaviour
     {
         finishLine = GameObject.FindGameObjectWithTag("Finish");
         gambler = gamblerGO.GetComponent<Gambler>();
-        display = GameObject.FindGameObjectWithTag("Display");
-        finalPositionsText = display.transform.GetChild(0).GetComponent<TMP_Text>();
-        moneyText = GameObject.FindGameObjectWithTag("MoneyText").GetComponent<TMP_Text>();
+        resultsDisplay = GameObject.FindGameObjectWithTag("Display");
+        finalPositionsText = resultsDisplay.transform.GetChild(0).GetComponent<TMP_Text>();
+        finalPositionsText.fontSize = 42.4f;
 
+        moneyText = GameObject.FindGameObjectWithTag("MoneyText").GetComponent<TMP_Text>();
         moneyText.text = "$" + gambler.GetMoney();
+
+        hasPlacedBet = gambler.GetHasPlacedBet();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (racing)
+        if (racing || !hasPlacedBet)
         {
             raceButton.SetActive(false);
-            display.SetActive(false);
+            resultsDisplay.SetActive(false);
         }
         else
         {
@@ -42,11 +46,11 @@ public class GameState : MonoBehaviour
 
             if (finalPositionsText.text.Length > 0)
             {
-                display.SetActive(true);
+                resultsDisplay.SetActive(true);
             }
             else
             {
-                display.SetActive(false);
+                resultsDisplay.SetActive(false);
             }
 
             GameObject[] horses = GameObject.FindGameObjectsWithTag("Horse");
@@ -90,4 +94,11 @@ public class GameState : MonoBehaviour
             finishPositions.Clear();
         }
     }
+
+    public void SetMoney(int amount)
+    {
+        moneyText.text = "$" + amount;
+    }
+    
+    
 }
