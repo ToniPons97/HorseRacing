@@ -60,9 +60,7 @@ public class Gambler : MonoBehaviour
             bets[horseName] += betAmount;
 
             // Updating bet display
-            GameObject betDisplay = GameObject.FindGameObjectWithTag(horseName + " Bet");
-            TMP_Text betDisplayText = betDisplay.GetComponent<TMP_Text>();
-            betDisplayText.text = "$" + bets[horseName];
+            UpdateBetDisplay(horseName, bets[horseName]);
 
             // Updating gambler's money and money display.
             money -= betAmount;
@@ -74,15 +72,25 @@ public class Gambler : MonoBehaviour
     {
         if (betAmount >= money)
         {
+            // Updating bets dictionary
             bets[horseName] -= betAmount;
 
-            GameObject betDisplay = GameObject.FindGameObjectWithTag(horseName + " Bet");
-            TMP_Text betDisplayText = betDisplay.GetComponent<TMP_Text>();
-            betDisplayText.text = "$" + bets[horseName];
+            // Updating bet display
+            UpdateBetDisplay(horseName, bets[horseName]);
 
-            money -= betAmount;
+            // Updating gambler's money and money display.
+            money += betAmount;
             gameState.SetMoney(money);
         }
+    }
+
+    private void UpdateBetDisplay(string horseName, int amount)
+    {
+        GameObject betDisplay = GameObject.FindGameObjectWithTag(horseName + " Bet");
+        TMP_Text betDisplayText = betDisplay.GetComponent<TMP_Text>();
+        betDisplayText.text = "$" + amount;
+
+        
     }
 
     private void InitializeBets()
