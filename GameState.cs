@@ -125,8 +125,8 @@ public class GameState : MonoBehaviour
 
     private void UpdateHorseNameDisplays()
     {
-        List<string> horsesNames = HorseNameManager.GetInstantiatedHorsesNames();
 
+        List<string> horsesNames = HorseNameManager.GetInstantiatedHorsesNames();
         for (int i = 0; i < 5; i++)
         {
             horseNameTexts[i].text = horsesNames[i];

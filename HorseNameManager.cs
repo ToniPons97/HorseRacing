@@ -31,6 +31,8 @@ public class HorseNameManager : MonoBehaviour
 
     private static List<int> usedHorseNamesIndexes = new();
 
+    private static int counter = 0;
+
     public static string GetRandomHorseName()
     {
         int randomIndex;
@@ -59,6 +61,8 @@ public class HorseNameManager : MonoBehaviour
             usedHorses.Add(horseNames[n]);
         }
 
+        //counter++;
+        //Debug.Log("Called: " + counter);
         return usedHorses;
     }
 }

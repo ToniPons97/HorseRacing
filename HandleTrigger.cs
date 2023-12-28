@@ -36,14 +36,14 @@ public class HandleTrigger : MonoBehaviour
             // Set racing state to false.
             gameState.SetRacingState(false);
 
+            // Set hasPlacedBets to false.            
+            gambler.SetHasPlacedBet(false);
+
             // Calculate win
             gambler.CalculateWin(finishPositions[0]);
 
-            // Reset bets
-            gambler.ResetBets();
 
-            // Set hasPlacedBets to false.            
-            gambler.SetHasPlacedBet(false);
+
 
             // Destroy horses.
             GameObject[] horses = GameObject.FindGameObjectsWithTag("Horse");
@@ -52,7 +52,11 @@ public class HandleTrigger : MonoBehaviour
                 Destroy(horse);
             }
 
+            HorseNameManager.ResetUsedNamesList();
 
+
+            // Reset bets
+            gambler.ResetBets();
 
             // Reset exitCount.
             exitCount = 0;

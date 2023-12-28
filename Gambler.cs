@@ -140,6 +140,12 @@ public class Gambler : MonoBehaviour
 
     public void ResetBets()
     {
+        // This doesn't work, NullReferenceException
+        //for (int i = 0; i < 5; i++)
+        //{
+        //    UpdateBetDisplay("Horse " + (i + 1), 0);
+        //}
+
         bets.Clear();
     }
 

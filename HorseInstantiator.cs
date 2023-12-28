@@ -27,7 +27,6 @@ public class HorseInstantiator : MonoBehaviour
             spawnY = wtf - i * multiplier;
             position = new(spawnX, spawnY, 0);
             GameObject newHorse = Instantiate(horse, position, Quaternion.identity);
-            //newHorse.name = "Horse " + (5 - i);
             newHorse.name = HorseNameManager.GetRandomHorseName();
         }
     }
