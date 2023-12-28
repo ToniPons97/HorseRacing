@@ -25,9 +25,9 @@ public class HorseController : MonoBehaviour
         // Assign a random speed within the specified range to each horse.
         baseSpeed = Random.Range(minSpeed, maxSpeed);
 
-
         SetHorseSpeed(baseSpeed);
 
+        // WIN CONDITION DEBUG.
         Debug.Log(gameObject.name + ": " + baseSpeed);
     }
 
@@ -42,9 +42,6 @@ public class HorseController : MonoBehaviour
     void Update()
     {
         racing = state.GetRacingState();
-
-        // Enable or disable renderer based on racing state.
-        //GetComponent<SpriteRenderer>().enabled = racing;
 
         // Play running animation when racing.
         animator.SetBool("isRunning", racing);

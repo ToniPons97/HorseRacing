@@ -22,12 +22,13 @@ public class HorseInstantiator : MonoBehaviour
 
     public void InitHorses()
     {
-        for (int i = 0; i < 5; i++)
+        for (int i = 4; i >= 0; i--)
         {
             spawnY = wtf - i * multiplier;
             position = new(spawnX, spawnY, 0);
             GameObject newHorse = Instantiate(horse, position, Quaternion.identity);
-            newHorse.name = "Horse " + (5 - i);
+            //newHorse.name = "Horse " + (5 - i);
+            newHorse.name = HorseNameManager.GetRandomHorseName();
         }
     }
 }

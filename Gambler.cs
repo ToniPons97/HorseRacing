@@ -22,25 +22,13 @@ public class Gambler : MonoBehaviour
         bets = new Dictionary<string, int>();
         InitializeBets();
         betMenu = GameObject.FindGameObjectWithTag("BetMenu");
-
-        //PrintBets();
     }
 
     // Update is called once per frame
     void Update()
     {
         CheckBets();
-
-        racing = gameState.GetRacingState();
-        if (racing)
-        {
-            betMenu.SetActive(false);
-        }
-        else
-        {
-            betMenu.SetActive(true);
-        }
-
+        UpdateBetMenuVisibility();
     }
 
     public int GetMoney()
@@ -60,13 +48,14 @@ public class Gambler : MonoBehaviour
 
     public void AddBet(string horseName)
     {
+        string realHorseName = ConvertLabelToHorseName(horseName);
         if (betAmount <= money)
         {
             // Updating bets dictionary
-            bets[horseName] += betAmount;
+            bets[realHorseName] += betAmount;
 
             // Updating bet display
-            UpdateBetDisplay(horseName, bets[horseName]);
+            UpdateBetDisplay(horseName, bets[realHorseName]);
 
             // Updating gambler's money and money display.
             money -= betAmount;
@@ -76,13 +65,14 @@ public class Gambler : MonoBehaviour
 
     public void ReduceBet(string horseName)
     {
-        if (bets[horseName] - betAmount >= 0)
+        string realHorseName = ConvertLabelToHorseName(horseName);
+        if (bets[realHorseName] - betAmount >= 0)
         {
             // Updating bets dictionary
-            bets[horseName] -= betAmount;
+            bets[realHorseName] -= betAmount;
 
             // Updating bet display
-            UpdateBetDisplay(horseName, bets[horseName]);
+            UpdateBetDisplay(horseName, bets[realHorseName]);
 
             // Updating gambler's money and money display.
             money += betAmount;
@@ -99,13 +89,41 @@ public class Gambler : MonoBehaviour
         betDisplayText.text = "$" + amount;
     }
 
-    private void InitializeBets()
+    public void InitializeBets()
     {
-        for (int i = 0; i < 5; i++)
+        List<string> horsesNames = HorseNameManager.GetInstantiatedHorsesNames();
+
+        for (int i = 0; i < horsesNames.Count; i++)
         {
-            bets.Add("Horse" + " " + (i + 1), 0);
+            bets.Add(horsesNames[i], 0);
         }
     }
+
+
+
+    private string ConvertLabelToHorseName(string label)
+    {
+        List<string> horsesNames = HorseNameManager.GetInstantiatedHorsesNames();
+
+        string horseLabelIndex = label.Split(" ")[1];
+        int.TryParse(horseLabelIndex, out int index);
+
+        return horsesNames[index - 1];
+    }
+
+    private void UpdateBetMenuVisibility()
+    {
+        racing = gameState.GetRacingState();
+        if (racing)
+        {
+            betMenu.SetActive(false);
+        }
+        else
+        {
+            betMenu.SetActive(true);
+        }
+    }
+
 
     public void CalculateWin(string winningHorse)
     {
@@ -117,23 +135,12 @@ public class Gambler : MonoBehaviour
             Debug.Log("You won!");
 
             money += bets[winningHorse] * winMultiplier;
-            gameState.SetMoneyDisplay(money);
         }
-
     }
 
     public void ResetBets()
     {
-        List<string> keys = new(bets.Keys);
-
-        foreach (var key in keys)
-        {
-            Debug.Log(key);
-            bets[key] = 0;
-
-            // This isn't working
-            //UpdateBetDisplay(key, 0);
-        }
+        bets.Clear();
     }
 
     // Check if there are bets placed.

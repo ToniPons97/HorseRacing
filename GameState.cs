@@ -10,10 +10,12 @@ public class GameState : MonoBehaviour
     private Button raceButton;
     private GameObject raceButtonGO;
     private TMP_Text finalPositionsText;
+    [SerializeField] private float finalPositionsFontSize = 24f;
     private GameObject resultsDisplay;
     private TMP_Text moneyText;
     [SerializeField] private GameObject gamblerGO;
     private Gambler gambler;
+    private List<TMP_Text> horseNameTexts = new();
 
     private bool racing;
     private bool hasPlacedBet;
@@ -35,7 +37,7 @@ public class GameState : MonoBehaviour
         finalPositionsText = resultsDisplay.transform.GetChild(0)
                                 .GetComponent<TMP_Text>();
 
-        finalPositionsText.fontSize = 42.4f;
+        finalPositionsText.fontSize = finalPositionsFontSize;
 
         moneyText = GameObject.FindGameObjectWithTag("MoneyText")
                                 .GetComponent<TMP_Text>();
@@ -43,6 +45,19 @@ public class GameState : MonoBehaviour
         moneyText.text = "$" + gambler.GetMoney();
 
 
+
+
+        GameObject[] horseNameTextsGOs = GameObject.FindGameObjectsWithTag("HorseNameText");
+        foreach(GameObject ht in horseNameTextsGOs)
+        {
+            if (ht != null)
+            {
+                horseNameTexts.Add(ht.GetComponent<TMP_Text>());
+            }
+        }
+
+
+        UpdateHorseNameDisplays();                                   
     }
 
     // Update is called once per frame
@@ -51,8 +66,21 @@ public class GameState : MonoBehaviour
         UpdateRaceButtonVisibility();
         UdateRaceResultsPanel();
 
-        hasPlacedBet = gambler.GetHasPlacedBet();
+        if (!racing)
+        {
+            GameObject[] horses = GameObject.FindGameObjectsWithTag("Horse");
+            if (horses.Length != 5)
+            {
+                horseInstantiator
+                    .GetComponent<HorseInstantiator>()
+                    .InitHorses();
+                gambler.InitializeBets();
+            }
 
+            UpdateHorseNameDisplays();
+        }
+
+        hasPlacedBet = gambler.GetHasPlacedBet();
 
         if (racing || !hasPlacedBet)
         {
@@ -62,20 +90,13 @@ public class GameState : MonoBehaviour
         {
             raceButton.interactable = true;
 
-            GameObject[] horses = GameObject.FindGameObjectsWithTag("Horse");
-            if (horses.Length != 5)
-            {
-                horseInstantiator
-                    .GetComponent<HorseInstantiator>()
-                    .InitHorses();
-                return;
-            }
+            //HorseNameManager.ResetUsedNamesList();
+
         }
     }
 
     private void UpdateRaceButtonVisibility()
     {
-
         if (racing)
         {
             raceButtonGO.SetActive(false);
@@ -88,20 +109,27 @@ public class GameState : MonoBehaviour
 
     private void UdateRaceResultsPanel()
     {
-        if (!racing)
+        finishPositions = finishLine.GetComponent<HandleTrigger>()
+                                        .GetFinishOrder();
+        finalPositionsText.text = "";
+        int posCount = 1;
+        foreach (string horse in finishPositions)
         {
-            finishPositions = finishLine.GetComponent<HandleTrigger>()
-                                            .GetFinishOrder();
-            finalPositionsText.text = "";
-            int posCount = 1;
-            foreach (string horse in finishPositions)
-            {
-                finalPositionsText.text += posCount + ". " + horse + "\n";
-                posCount++;
+            finalPositionsText.text += posCount + ". " + horse + "\n";
+            posCount++;
 
-                if (posCount > 5)
-                    posCount = 1;
-            }
+            if (posCount > 5)
+                posCount = 1;
+        }
+    }
+
+    private void UpdateHorseNameDisplays()
+    {
+        List<string> horsesNames = HorseNameManager.GetInstantiatedHorsesNames();
+
+        for (int i = 0; i < 5; i++)
+        {
+            horseNameTexts[i].text = horsesNames[i];
         }
     }
 
