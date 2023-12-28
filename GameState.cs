@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
+
 public class GameState : MonoBehaviour
 {
     [SerializeField] private GameObject horseInstantiator;
-    [SerializeField] private GameObject raceButton;
+    private Button raceButton;
+    private GameObject raceButtonGO;
     private TMP_Text finalPositionsText;
     private GameObject resultsDisplay;
     private TMP_Text moneyText;
@@ -20,38 +23,44 @@ public class GameState : MonoBehaviour
 
     private void Start()
     {
+        raceButton = GameObject.FindGameObjectWithTag("RaceButton")
+                                .GetComponent<Button>();
+
+        raceButtonGO = raceButton.transform.parent.gameObject;
+
         finishLine = GameObject.FindGameObjectWithTag("Finish");
         gambler = gamblerGO.GetComponent<Gambler>();
         resultsDisplay = GameObject.FindGameObjectWithTag("Display");
-        finalPositionsText = resultsDisplay.transform.GetChild(0).GetComponent<TMP_Text>();
+
+        finalPositionsText = resultsDisplay.transform.GetChild(0)
+                                .GetComponent<TMP_Text>();
+
         finalPositionsText.fontSize = 42.4f;
 
-        moneyText = GameObject.FindGameObjectWithTag("MoneyText").GetComponent<TMP_Text>();
+        moneyText = GameObject.FindGameObjectWithTag("MoneyText")
+                                .GetComponent<TMP_Text>();
+
         moneyText.text = "$" + gambler.GetMoney();
 
-        hasPlacedBet = gambler.GetHasPlacedBet();
+
     }
 
     // Update is called once per frame
     void Update()
-    {
+    {   
+        UpdateRaceButtonVisibility();
+        UdateRaceResultsPanel();
+
+        hasPlacedBet = gambler.GetHasPlacedBet();
+
+
         if (racing || !hasPlacedBet)
         {
-            raceButton.SetActive(false);
-            resultsDisplay.SetActive(false);
+            raceButton.interactable = false;
         }
         else
         {
-            raceButton.SetActive(true);
-
-            if (finalPositionsText.text.Length > 0)
-            {
-                resultsDisplay.SetActive(true);
-            }
-            else
-            {
-                resultsDisplay.SetActive(false);
-            }
+            raceButton.interactable = true;
 
             GameObject[] horses = GameObject.FindGameObjectsWithTag("Horse");
             if (horses.Length != 5)
@@ -61,10 +70,28 @@ public class GameState : MonoBehaviour
                     .InitHorses();
                 return;
             }
+        }
+    }
 
+    private void UpdateRaceButtonVisibility()
+    {
+
+        if (racing)
+        {
+            raceButtonGO.SetActive(false);
+        }
+        else
+        {
+            raceButtonGO.SetActive(true);
+        }
+    }
+
+    private void UdateRaceResultsPanel()
+    {
+        if (!racing)
+        {
             finishPositions = finishLine.GetComponent<HandleTrigger>()
-                .GetFinishOrder();
-
+                                            .GetFinishOrder();
             finalPositionsText.text = "";
             int posCount = 1;
             foreach (string horse in finishPositions)
@@ -75,8 +102,6 @@ public class GameState : MonoBehaviour
                 if (posCount > 5)
                     posCount = 1;
             }
-
-            return;
         }
     }
 
@@ -95,10 +120,8 @@ public class GameState : MonoBehaviour
         }
     }
 
-    public void SetMoney(int amount)
+    public void SetMoneyDisplay(int amount)
     {
         moneyText.text = "$" + amount;
     }
-    
-    
 }

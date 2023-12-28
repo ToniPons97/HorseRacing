@@ -10,9 +10,9 @@ public class HorseController : MonoBehaviour
     private GameState state;
     private Animator animator;
 
-    public float minSpeed = 1.0f;
-    public float maxSpeed = 3.0f;
-    public float speedVariation = 0.5f; // Maximum variation to limit the difference in speed
+    [SerializeField] float minSpeed = 1.0f;
+    [SerializeField] float maxSpeed = 4.0f;
+    [SerializeField] float speedVariation = 1.5f; // Maximum variation to limit the difference in speed
 
     // Start is called before the first frame update
     void Start()
@@ -24,7 +24,11 @@ public class HorseController : MonoBehaviour
 
         // Assign a random speed within the specified range to each horse.
         baseSpeed = Random.Range(minSpeed, maxSpeed);
+
+
         SetHorseSpeed(baseSpeed);
+
+        Debug.Log(gameObject.name + ": " + baseSpeed);
     }
 
     // Function to set the horse's speed
